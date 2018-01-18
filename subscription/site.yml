@@ -1,0 +1,19 @@
+- name: This playbook subscribes the system to Employee SKU and enables repos
+  hosts: all
+  become: yes
+  vars_files:
+    - vars/secret.yml
+
+  tasks:
+    - name: Subscribe this system to the RHN
+      redhat_subscription:
+        state: present
+        username: "pcornelius@redhat.com"
+        password: "{{ rhn_password }}"
+#        pool_ids: 8a85f98144844aff014488d059f61625
+        pool_ids: 8a85f98460bfb0470160c2ff250f3e66
+
+    - name: Disable unnecesary repos
+      command: subscription-manager repos --disable='*'
+    - name: Add RHEL repos
+      command: subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-optional-rpms --enable=rhel-7-server-extras-rpms --enable=rhel-7-server-rh-common-rpms
