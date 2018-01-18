@@ -1,0 +1,49 @@
+---
+- name: This is a playbook for cloning a vm in RHEV
+  hosts: localhost
+  gather_facts: False
+
+  tasks:
+    - block:
+      - include_vars: ovirt_Password.yml
+      
+      - name: Obtain SSO token using username/password creds.
+        ovirt_auth:
+          url: https://rhvm.internal.croftvillas.com/ovirt-engine/api
+          username: admin@internal
+          ca_file: pki-resource.cer
+          password: "{{ ovirt_password }}"
+
+
+      - name: This task clones a machine in RHEV
+        ovirt_vms:
+          auth: "{{ ovirt_auth }}"
+          state: present
+          cluster: "Cluster01"
+          name: "{{ item }}"
+          template: rhel7_template
+          cloud_init:
+            host_name: "{{ item }}.internal.croftvillas.com"
+        async: '300'
+        poll: '0'
+#        with_items:
+        with_sequence: start=1 end=26 format=rhel%02d
+        register: new_vms
+
+      - name: 'Debug'
+        debug:
+          msg: '{{ new_vms }}'
+          verbosity: '4'
+
+      - name: Check status
+        async_status: jid={{ item.ansible_job_id }}
+        register: job_result
+        until: job_result.finished
+        retries: 100
+        delay: 15
+        with_items: "{{ new_vms.results }}"
+      always:
+      - name: Always revoke the SSO token
+        ovirt_auth:
+          state: absent
+          ovirt_auth: "{{ ovirt_auth }}"
