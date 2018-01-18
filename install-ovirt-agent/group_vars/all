@@ -1,0 +1,2 @@
+ansible_ssh_user: pcorneli
+ansible_password: Secur05ty
