@@ -1,0 +1,40 @@
+---
+- name: This is a playbook makes sure that the hosts in a cluster are started
+  hosts: localhost
+  gather_facts: False
+
+  tasks:
+    - block:
+      - include_vars: ovirt_Password.yml
+      
+      - name: Obtain SSO token using username/password creds.
+        ovirt_auth:
+          url: https://rhvm.internal.croftvillas.com/ovirt-engine/api
+          username: admin@internal
+          ca_file: pki-resource.cer
+          password: "{{ ovirt_password }}"
+
+
+      - name: This task ensure the Cluster hosts are {{ desired_state }}
+        ovirt_hosts:
+          auth: "{{ ovirt_auth }}"
+          state: "{{ desired_state }}"
+          cluster: "Cluster02"
+          name: "{{ item }}"
+          timeout: '600'
+          poll_interval: '10'
+        with_items:
+          - rhev03
+#          - rhev07
+        register: host_state
+
+      - name: 'Debug'
+        debug:
+          msg: '{{ host_state }}'
+          verbosity: '4'
+
+      always:
+      - name: Always revoke the SSO token
+        ovirt_auth:
+          state: absent
+          ovirt_auth: "{{ ovirt_auth }}"
