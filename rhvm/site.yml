@@ -22,6 +22,7 @@
           cluster: "Cluster02"
           name: "{{ item }}"
           timeout: '600'
+          wait: True
           poll_interval: '10'
         with_items:
           "{{ rhev_hosts }}"
