@@ -22,7 +22,8 @@
           cluster: "Cluster02"
           name: "{{ item }}"
           timeout: 600
-          poll_interval: '10'
+          wait: True
+          poll_interval: 10
         async: '300'
         poll: '0'
         with_items:
