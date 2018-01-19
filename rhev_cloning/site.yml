@@ -18,7 +18,7 @@
       - name: This task clones a machine in RHEV
         ovirt_vms:
           auth: "{{ ovirt_auth }}"
-          state: present
+          state: "{{ machine_state }}"
           cluster: "Cluster01"
           name: "{{ item }}"
           template: rhel7_template
