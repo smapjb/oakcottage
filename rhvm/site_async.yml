@@ -26,8 +26,7 @@
         async: '300'
         poll: '0'
         with_items:
-          - rhev03
-#          - rhev07
+          "{{ rhev_hosts }}"
         register: host_state
 
       - name: 'Debug'
