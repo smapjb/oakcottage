@@ -24,8 +24,7 @@
           timeout: '600'
           poll_interval: '10'
         with_items:
-          - rhev03
-#          - rhev07
+          "{{ rhev_hosts }}"
         register: host_state
 
       - name: 'Debug'
