@@ -19,7 +19,7 @@
         ovirt_hosts:
           auth: "{{ ovirt_auth }}"
           state: "{{ desired_state }}"
-          cluster: "Cluster02"
+          cluster: "Cluster01"
           name: "{{ item }}"
           timeout: 600
           wait: True
