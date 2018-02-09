@@ -27,7 +27,7 @@
         async: '300'
         poll: '0'
 #        with_items:
-        with_sequence: start=1 end=2 format=rhel%02d
+        with_sequence: start=1 end=20 format=rhel%02d
         register: new_vms
 
       - name: 'Debug'
