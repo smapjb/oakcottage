@@ -23,7 +23,7 @@
           name: "{{ item }}"
           timeout: 600
           wait: True
-          poll_interval: 10
+          poll_interval: 7
         async: '300'
         poll: '0'
         with_items:
