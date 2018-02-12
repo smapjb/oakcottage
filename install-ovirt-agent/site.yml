@@ -1,5 +1,5 @@
 - name: This playbook installs the ovirt-agent on all the subscribed systems
-  hosts: "tag_group_{{ host_prefix }}"
+  hosts: "tag_group_{{ hostname_prefix | default('all') }}"
   become: yes
 
   tasks:
