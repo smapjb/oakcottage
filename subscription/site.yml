@@ -1,5 +1,5 @@
 - name: This playbook subscribes the system to Employee SKU and enables repos
-  hosts: all
+  hosts: "tag_group_{{ hostname_prefix | default('all') }}"
   become: yes
   vars_files:
     - vars/secret.yml
