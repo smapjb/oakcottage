@@ -2,6 +2,12 @@
 - name: This is a playbook for cloning a vm in RHEV
   hosts: localhost
   gather_facts: False
+  vars:
+    machine_state: present
+    host_memory: 2
+    hostname_prefix: rhel
+    sequence_start: 1
+    sequence_end: 3
 
   tasks:
     - block:
@@ -43,6 +49,17 @@
         retries: 100
         delay: 15
         with_items: "{{ new_vms.results }}"
+
+      - name: Tag these vms so they can be identified in the inventory
+        ovirt_tags:
+          auth: "{{ ovirt_auth }}"
+          name: "group_{{ hostname_prefix }}"
+          state: attached
+          vms:
+            - "{{ item }}"
+        with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
+        when: machine_state == "present"
+      
       always:
       - name: Always revoke the SSO token
         ovirt_auth:
