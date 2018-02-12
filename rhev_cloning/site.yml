@@ -8,6 +8,7 @@
     hostname_prefix: rhel
     sequence_start: 1
     sequence_end: 3
+    sockets: 1
 
   tasks:
     - block:
@@ -29,6 +30,7 @@
           name: "{{ item }}"
           template: rhel7_template
           memory: "{{ host_memory }}GiB"
+          cpu_sockets: "{{ sockets }}"
           cloud_init:
             host_name: "{{ item }}.internal.croftvillas.com"
         async: '300'
