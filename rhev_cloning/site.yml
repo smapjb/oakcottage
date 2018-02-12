@@ -50,10 +50,20 @@
         delay: 15
         with_items: "{{ new_vms.results }}"
 
-      - name: Tag these vms so they can be identified in the inventory
+      - name: Tag these vms by hostname_prefix
         ovirt_tags:
           auth: "{{ ovirt_auth }}"
           name: "group_{{ hostname_prefix }}"
+          state: attached
+          vms:
+            - "{{ item }}"
+        with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
+        when: machine_state == "present"
+
+      - name: Tag these vms with all
+        ovirt_tags:
+          auth: "{{ ovirt_auth }}"
+          name: "group_all"
           state: attached
           vms:
             - "{{ item }}"
