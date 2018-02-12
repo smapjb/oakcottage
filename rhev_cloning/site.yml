@@ -22,6 +22,7 @@
           cluster: "Cluster01"
           name: "{{ item }}"
           template: rhel7_template
+          memory: "{{ host_memory }}GiB"
           cloud_init:
             host_name: "{{ item }}.internal.croftvillas.com"
         async: '300'
