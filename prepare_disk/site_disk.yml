@@ -1,0 +1,34 @@
+- name: This playbook prepares the newly attached disk
+  hosts: "tag_group_{{ hostname_prefix | default('all') }}"
+  gather_facts: false
+  become: yes
+
+  vars:
+    disk_added: False
+
+  tasks:
+    - name: Prepare the new disk
+      block:
+       - name: Create a logical partition on the new disk
+         parted:
+           device: /dev/sdb
+           number: 1
+           flags: [ lvm ]
+           state: present
+       - name: Add the new physical volume to the VG 
+         lvg:
+           vg: rhel
+           pvs: "/dev/sda2,/dev/sdb1"
+       - name: Expand the volume group into the new space
+         lvol:
+           vg: rhel
+           lv: root
+           size: +100%FREE
+       - name: Expand the filesystem into the new space
+         filesystem:
+           fstype: xfs
+           dev: /dev/mapper/rhel-root 
+           resizefs: yes
+      when: disk_added
+
+
