@@ -50,7 +50,7 @@
         ovirt_disk:
           auth: "{{ ovirt_auth }}"
           vm_name: "{{ item }}"
-          name: rhel7_Disk2
+          name: "{{ item }}_ExtraDisk"
           state: present
           size: "{{ extra_space }}GiB"
           storage_domain: QNAP_NFS
