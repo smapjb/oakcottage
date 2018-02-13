@@ -86,7 +86,7 @@
         async: '300'
         poll: '0'
         with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
-        when: disk_added and machine_state == "present"
+        when: disk_added == "True" and machine_state == "present"
         register: new_disks
         
       - name: Check disk creation status
@@ -96,7 +96,7 @@
         retries: 100
         delay: 15
         with_items: "{{ new_disks.results }}"
-        when: disk_added and machine_state == "present"
+        when: disk_added == "True" and machine_state == "present"
 
       always:
       - name: Always revoke the SSO token
