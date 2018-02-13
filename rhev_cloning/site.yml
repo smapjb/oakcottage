@@ -29,7 +29,7 @@
           auth: "{{ ovirt_auth }}"
           state: "{{ machine_state }}"
           cluster: "Cluster01"
-          name: "{{ item }}"
+          name: "{{ item }}.internal.croftvillas.com"
           template: rhel7_template
           wait: True
           memory: "{{ host_memory }}GiB"
@@ -60,7 +60,7 @@
           name: "group_{{ hostname_prefix }}"
           state: attached
           vms:
-            - "{{ item }}"
+            - "{{ item }}.internal.croftvillas.com"
         with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
         when: machine_state == "present"
 
@@ -70,14 +70,14 @@
           name: "group_all"
           state: attached
           vms:
-            - "{{ item }}"
+            - "{{ item }}.internal.croftvillas.com"
         with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
         when: machine_state == "present"
 
       - name: Add an additional disk to the VM
         ovirt_disk:
           auth: "{{ ovirt_auth }}"
-          vm_name: "{{ item }}"
+          vm_name: "{{ item }}.internal.croftvillas.com"
           name: "{{ item }}_ExtraDisk"
           state: present
           size: "{{ extra_space }}GiB"
