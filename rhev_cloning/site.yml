@@ -31,6 +31,7 @@
           cluster: "Cluster01"
           name: "{{ item }}"
           template: rhel7_template
+          wait: True
           memory: "{{ host_memory }}GiB"
           cpu_sockets: "{{ sockets }}"
           cloud_init:
