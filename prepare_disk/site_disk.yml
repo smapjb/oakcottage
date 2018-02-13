@@ -29,6 +29,6 @@
            fstype: xfs
            dev: /dev/mapper/rhel-root 
            resizefs: yes
-      when: disk_added
+        when: disk_added == "True" and machine_state == "present"
 
 
