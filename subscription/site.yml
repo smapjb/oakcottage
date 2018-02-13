@@ -17,3 +17,19 @@
       command: subscription-manager repos --disable='*'
     - name: Add RHEL repos
       command: subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-optional-rpms --enable=rhel-7-server-extras-rpms --enable=rhel-7-server-rh-common-rpms
+  
+    - name: Install the ovirt-agent using yum
+      yum:
+        state: latest
+        name: rhevm-guest-agent-common
+      notify: Start ovirt-agent
+    - name: Make sure that the service is enabled
+      service:
+        name: ovirt-guest-agent
+        enabled: yes
+
+  handlers:
+    - name: Start ovirt-agent
+      service: 
+        name: ovirt-guest-agent
+        state: started
