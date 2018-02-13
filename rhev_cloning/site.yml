@@ -46,25 +46,6 @@
           msg: '{{ new_vms }}'
           verbosity: '4'
 
-      - name: Add an additional disk to the VM
-        ovirt_disk:
-          auth: "{{ ovirt_auth }}"
-          vm_name: "{{ item }}"
-          name: "{{ item }}_ExtraDisk"
-          state: present
-          size: "{{ extra_space }}GiB"
-          storage_domain: QNAP_NFS
-          interface: virtio_scsi
-        with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
-        when: disk_added and machine_state == "present"
-
-      always:
-      - name: Always revoke the SSO token
-        ovirt_auth:
-          state: absent
-          ovirt_auth: "{{ ovirt_auth }}"
-
-
       - name: Check status
         async_status: jid={{ item.ansible_job_id }}
         register: job_result
@@ -92,7 +73,19 @@
             - "{{ item }}"
         with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
         when: machine_state == "present"
-      
+
+      - name: Add an additional disk to the VM
+        ovirt_disk:
+          auth: "{{ ovirt_auth }}"
+          vm_name: "{{ item }}"
+          name: "{{ item }}_ExtraDisk"
+          state: present
+          size: "{{ extra_space }}GiB"
+          storage_domain: QNAP_NFS
+          interface: virtio_scsi
+        with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
+        when: disk_added and machine_state == "present"
+
       always:
       - name: Always revoke the SSO token
         ovirt_auth:
