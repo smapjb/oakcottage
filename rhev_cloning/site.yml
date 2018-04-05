@@ -14,7 +14,7 @@
 
   tasks:
     - block:
-      - include_vars: ovirt_Password.yml
+      - include_vars: ../ovirt_Password.yml
       
       - name: Obtain SSO token using username/password creds.
         ovirt_auth:
