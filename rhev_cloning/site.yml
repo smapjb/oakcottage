@@ -20,7 +20,7 @@
         ovirt_auth:
           url: https://rhvm.internal.croftvillas.com/ovirt-engine/api
           username: admin@internal
-          ca_file: pki-resource.cer
+          ca_file: ../pki-resource.cer
           password: "{{ ovirt_password }}"
 
 
