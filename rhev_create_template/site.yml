@@ -1,0 +1,25 @@
+---
+- name: This is a playbook for cloning a vm in RHEV
+  hosts: localhost
+  gather_facts: False
+
+  vars_files:
+    - ../ovirt_Password.yml
+    
+  vars:
+    engine_url: https://rhvm.internal.croftvillas.com/ovirt-engine/api
+    engine_user: admin@internal
+    engine_password: "{{ ovirt_password }}"
+    engine_cafile: ../pki-resource.cer
+
+    qcow_url: http://clearos.internal.croftvillas.com/rhel-server-7.4-x86_64-kvm.qcow2
+    template_cluster: Cluster01
+    template_name: rhel7_template
+    template_memory: 2GiB
+    template_cpu: 2
+    template_disk_size: 10GiB
+    template_disk_storage: QNAP_SD
+
+  roles:
+    - oVirt.image-template
+
