@@ -12,7 +12,8 @@
     engine_password: "{{ ovirt_password }}"
     engine_cafile: ../pki-resource.cer
 
-    qcow_url: http://clearos.internal.croftvillas.com/rhel-server-7.4-x86_64-kvm.qcow2
+    #qcow_url: http://clearos.internal.croftvillas.com/rhel-server-7.4-x86_64-kvm.qcow2
+    qcow_url: http://clearos.internal.croftvillas.com/rhel-server-7.5-beta-1-x86_64-kvm.qcow2
     template_cluster: Cluster01
     template_name: rhel7_template
     template_memory: 2GiB

@@ -9,8 +9,8 @@
     sequence_start: 1
     sequence_end: 3
     sockets: 1
-    disk_added: False
-    extra_space: 12
+    #disk_added: False
+    #extra_space: 12
 
   tasks:
     - block:
@@ -22,7 +22,6 @@
           username: admin@internal
           ca_file: ../pki-resource.cer
           password: "{{ ovirt_password }}"
-
 
       - name: This task clones a machine in RHEV
         ovirt_vms:
@@ -36,6 +35,7 @@
           cpu_sockets: "{{ sockets }}"
           cloud_init:
             host_name: "{{ item }}.internal.croftvillas.com"
+            authorized_ssh_keys: "{{ root_ssh_key }}"
         async: '300'
         poll: '0'
         with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
@@ -74,29 +74,29 @@
         with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
         when: machine_state == "present"
 
-      - name: Add an additional disk to the VM
-        ovirt_disk:
-          auth: "{{ ovirt_auth }}"
-          vm_name: "{{ item }}.internal.croftvillas.com"
-          name: "{{ item }}_ExtraDisk"
-          state: present
-          size: "{{ extra_space }}GiB"
-          storage_domain: QNAP_NFS
-          interface: virtio_scsi
-        async: '300'
-        poll: '0'
-        with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
-        when: disk_added == "True" and machine_state == "present"
-        register: new_disks
+    #  - name: Add an additional disk to the VM
+    #    ovirt_disk:
+    #      auth: "{{ ovirt_auth }}"
+    #      vm_name: "{{ item }}.internal.croftvillas.com"
+    #      name: "{{ item }}_ExtraDisk"
+    #      state: present
+    #      size: "{{ extra_space }}GiB"
+    #      storage_domain: QNAP_SD
+    #      interface: virtio
+    #    async: '300'
+    #    poll: '0'
+    #    with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
+    #    when: disk_added == "True" and machine_state == "present"
+    #    register: new_disks
         
-      - name: Check disk creation status
-        async_status: jid={{ item.ansible_job_id }}
-        register: job_result
-        until: job_result.finished
-        retries: 100
-        delay: 15
-        with_items: "{{ new_disks.results }}"
-        when: disk_added == "True" and machine_state == "present"
+    #  - name: Check disk creation status
+    #    async_status: jid={{ item.ansible_job_id }}
+    #    register: job_result
+    #    until: job_result.finished
+    #    retries: 100
+    #    delay: 15
+    #    with_items: "{{ new_disks.results }}"
+    #    when: disk_added == "True" and machine_state == "present"
 
       always:
       - name: Always revoke the SSO token
