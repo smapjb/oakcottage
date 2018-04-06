@@ -65,7 +65,7 @@
           vms:
             - "{{ item }}.internal.croftvillas.com"
         with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
-        when: machine_state == "present"
+        when: machine_state == "running"
 
       - name: Tag these vms with all
         ovirt_tags:
@@ -75,7 +75,7 @@
           vms:
             - "{{ item }}.internal.croftvillas.com"
         with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
-        when: machine_state == "present"
+        when: machine_state == "running"
 
       - name: Wait for VMs IP
         ovirt_vms_facts:
@@ -100,14 +100,14 @@
     #      auth: "{{ ovirt_auth }}"
     #      vm_name: "{{ item }}.internal.croftvillas.com"
     #      name: "{{ item }}_ExtraDisk"
-    #      state: present
+    #      state: running
     #      size: "{{ extra_space }}GiB"
     #      storage_domain: QNAP_SD
     #      interface: virtio
     #    async: '300'
     #    poll: '0'
     #    with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
-    #    when: disk_added == "True" and machine_state == "present"
+    #    when: disk_added == "True" and machine_state == "running"
     #    register: new_disks
         
     #  - name: Check disk creation status
@@ -117,7 +117,7 @@
     #    retries: 100
     #    delay: 15
     #    with_items: "{{ new_disks.results }}"
-    #    when: disk_added == "True" and machine_state == "present"
+    #    when: disk_added == "True" and machine_state == "running"
 
       always:
       - name: Always revoke the SSO token
