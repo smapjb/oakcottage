@@ -88,7 +88,8 @@
         retries: "{{ vm_infra_wait_for_ip_retries }}"
         delay: "{{ vm_infra_wait_for_ip_delay }}"
         vars:
-          query: "reported_devices[*].ips[*].address"
+          query: "reported_devices[*].ips[?version=='v4'].address"
+          #query: "reported_devices[*].ips[*].address"
         when:
           - "wait_for_ip"
           - "machine_state == 'present'"
