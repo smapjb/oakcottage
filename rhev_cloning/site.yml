@@ -9,6 +9,9 @@
     sequence_start: 1
     sequence_end: 3
     sockets: 1
+    wait_for_ip: True
+    vm_infra_wait_for_ip_retries: 5
+    vm_infra_wait_for_ip_delay: 5
     #disk_added: False
     #extra_space: 12
 
@@ -73,6 +76,23 @@
             - "{{ item }}.internal.croftvillas.com"
         with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
         when: machine_state == "present"
+
+      - name: Wait for VMs IP
+        ovirt_vms_facts:
+          auth: "{{ ovirt_auth }}"
+          pattern: "name={{ item }}.internal.croftvillas.com"
+          fetch_nested: true
+          nested_attributes: ips
+        with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
+        until: "ovirt_vms | first | json_query(query) | length > 0"
+        retries: "{{ vm_infra_wait_for_ip_retries }}"
+        delay: "{{ vm_infra_wait_for_ip_delay }}"
+        vars:
+          query: "reported_devices[*].ips[*].address"
+        when:
+          - "wait_for_ip"
+          - "machine_state == 'present'"
+
 
     #  - name: Add an additional disk to the VM
     #    ovirt_disk:
