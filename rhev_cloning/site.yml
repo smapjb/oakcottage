@@ -3,14 +3,14 @@
   hosts: localhost
   gather_facts: False
   vars:
-    machine_state: present
+    machine_state: running
     host_memory: 2
     hostname_prefix: rhel
     sequence_start: 1
     sequence_end: 3
     sockets: 1
     wait_for_ip: True
-    vm_infra_wait_for_ip_retries: 5
+    vm_infra_wait_for_ip_retries: 100
     vm_infra_wait_for_ip_delay: 5
     #disk_added: False
     #extra_space: 12
@@ -84,7 +84,7 @@
           fetch_nested: true
           nested_attributes: ips
         with_sequence: start="{{ sequence_start }}" end="{{ sequence_end }}" format="{{ hostname_prefix }}%02d"
-        until: "ovirt_vms | first | json_query(query) | length > 0"
+        until: "ovirt_vms | first | json_query(query) | ipv4"
         retries: "{{ vm_infra_wait_for_ip_retries }}"
         delay: "{{ vm_infra_wait_for_ip_delay }}"
         vars:
@@ -92,7 +92,7 @@
           #query: "reported_devices[*].ips[*].address"
         when:
           - "wait_for_ip"
-          - "machine_state == 'present'"
+          - "machine_state == 'running'"
 
 
     #  - name: Add an additional disk to the VM
