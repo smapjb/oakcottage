@@ -1,0 +1,61 @@
+---
+- name: This is a playbook makes sure that the hosts in a cluster are started
+  hosts: localhost
+  gather_facts: False
+  vars:
+    rhev_hosts:
+     - rhev02
+     - rhev03
+     - rhev05
+
+  tasks:
+    - block:
+      - include_vars: ../ovirt_Password.yml
+      
+      - name: Obtain SSO token using username/password creds.
+        ovirt_auth:
+          url: https://rhvm.internal.croftvillas.com/ovirt-engine/api
+          username: admin@internal
+          ca_file: ../pki-resource.cer
+          password: "{{ ovirt_password }}"
+
+
+      - name: This task ensure the Cluster hosts are {{ desired_state }}
+        ovirt_host_facts:
+          auth: "{{ ovirt_auth }}"
+
+      - name: 'Identify the running host'
+        set_fact:
+          running_host: "{{ my_idx }}"
+        when: item == "up"
+        loop: "{{ ovirt_hosts | json_query('[*].status') }}"
+        loop_control:
+          index_var: my_idx
+
+      - name: 'Output information about the running host'
+        debug:
+          var: rhev_hosts[( running_host + 1 )% 3]
+
+      - name: 'Start up the next host'
+        ovirt_hosts:
+          auth: "{{ ovirt_auth }}"
+          state: "started"
+          cluster: "Cluster01"
+          name: "{{ rhev_hosts[( running_host + 1 )% 3] }}"
+          timeout: 600
+          wait: True
+
+      - name: 'Shut down the current host'
+        ovirt_hosts:
+          auth: "{{ ovirt_auth }}"
+          state: "stopped"
+          cluster: "Cluster01"
+          name: "{{ rhev_hosts[ running_host ] }}"
+          timeout: 600
+          wait: True
+
+      always:
+      - name: Always revoke the SSO token
+        ovirt_auth:
+          state: absent
+          ovirt_auth: "{{ ovirt_auth }}"
