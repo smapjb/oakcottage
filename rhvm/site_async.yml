@@ -16,7 +16,7 @@
 
 
       - name: This task ensure the Cluster hosts are {{ desired_state }}
-        ovirt_hosts:
+        ovirt_host:
           auth: "{{ ovirt_auth }}"
           state: "{{ desired_state }}"
           cluster: "Cluster01"
