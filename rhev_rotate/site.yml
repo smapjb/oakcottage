@@ -34,7 +34,7 @@
           - name: 'Identify the running host'
             set_fact:
               running_host: "{{ my_idx }}"
-            when: item == "up" 
+            when: item == "up" | bool
             loop: "{{ ovirt_hosts | json_query('[*].status') }}"
             loop_control:
               index_var: my_idx
@@ -60,7 +60,7 @@
               name: "{{ rhev_hosts[ running_host ] }}"
               timeout: 600
               wait: True
-        when: proceed_flag
+        when: proceed_flag | bool
       always:
       - name: Always revoke the SSO token
         ovirt_auth:
