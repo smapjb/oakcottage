@@ -58,7 +58,7 @@
           verbosity: '4'
 
       - name: Tag these vms by hostname_prefix
-        ovirt_tags:
+        ovirt_tag:
           auth: "{{ ovirt_auth }}"
           name: "group_{{ hostname_prefix }}"
           state: attached
@@ -68,7 +68,7 @@
         when: machine_state == "running"
 
       - name: Tag these vms with all
-        ovirt_tags:
+        ovirt_tag:
           auth: "{{ ovirt_auth }}"
           name: "group_all"
           state: attached
