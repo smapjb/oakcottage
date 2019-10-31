@@ -27,7 +27,7 @@
           password: "{{ ovirt_password }}"
 
       - name: This task clones a machine in RHEV
-        ovirt_vms:
+        ovirt_vm:
           auth: "{{ ovirt_auth }}"
           state: "{{ machine_state }}"
           cluster: "Cluster01"
@@ -78,7 +78,7 @@
         when: machine_state == "running"
 
       - name: Wait for VMs IP
-        ovirt_vms_facts:
+        ovirt_vm_facts:
           auth: "{{ ovirt_auth }}"
           pattern: "name={{ item }}.internal.croftvillas.com"
           fetch_nested: true
