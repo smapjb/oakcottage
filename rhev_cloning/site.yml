@@ -25,6 +25,7 @@
           username: admin@internal
           ca_file: ../pki-resource.cer
           password: "{{ ovirt_password }}"
+          insecure: yes
 
       - name: This task clones a machine in RHEV
         ovirt_vm:
