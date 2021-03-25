@@ -13,6 +13,7 @@
           username: admin@internal
           ca_file: ../pki-resource.cer
           password: "{{ ovirt_password }}"
+          insecure: yes
 
 
       - name: This task ensure the Cluster hosts are {{ desired_state }}
