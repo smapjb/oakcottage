@@ -35,7 +35,7 @@
           state: "{{ machine_state }}"
           cluster: "Cluster01"
           name: "{{ item }}.{{domain_name}}"
-          template: {{ template_name }}
+          template: "{{ template_name }}"
           wait: True
           memory: "{{ host_memory }}GiB"
           cpu_sockets: "{{ sockets }}"
