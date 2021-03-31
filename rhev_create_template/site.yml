@@ -13,13 +13,13 @@
     engine_cafile: ../pki-resource.cer
 
     #qcow_url: http://clearos.internal.croftvillas.com/rhel-server-7.4-x86_64-kvm.qcow2
-    qcow_url: http://gateway.internal.croftvillas.com/rhel-8.0-x86_64-kvm.qcow2
+    qcow_url: http://gateway.internal.croftvillas.com/rhel-server-7.9-update-3-x86_64-kvm.qcow2
     template_cluster: Cluster01
-    template_name: rhel8_template
+    template_name: rhel7.9_template
     template_memory: 2GiB
     template_cpu: 2
     template_disk_size: 10GiB
-    template_disk_storage: QNAP_SD
+    template_disk_storage: QNAP_PROD
 
   roles:
     - oVirt.image-template

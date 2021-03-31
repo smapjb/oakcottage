@@ -13,6 +13,7 @@
     vm_infra_wait_for_ip_retries: 100
     vm_infra_wait_for_ip_delay: 5
     domain_name: internal.croftvillas.com
+    template_name: rhel7.9_template
     #disk_added: False
     #extra_space: 12
 
@@ -34,7 +35,7 @@
           state: "{{ machine_state }}"
           cluster: "Cluster01"
           name: "{{ item }}.{{domain_name}}"
-          template: rhel7_template
+          template: {{ template_name }}
           wait: True
           memory: "{{ host_memory }}GiB"
           cpu_sockets: "{{ sockets }}"
